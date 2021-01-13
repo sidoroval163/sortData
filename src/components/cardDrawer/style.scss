@@ -1,0 +1,25 @@
+.card {
+    margin: 0 auto;
+  
+    &-img {
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  
+    &-text {
+      margin-bottom: 0;
+  
+      span {
+        font-weight: bold;
+      }
+  
+      &:nth-child(3) {
+        span {
+          color: blue;
+        }
+      }
+    }
+  }
+  
