@@ -2,7 +2,7 @@ import './App.scss';
 import React, { useState, useMemo, useRef } from 'react';
 import { DateTime } from 'luxon';
 import { observer } from 'mobx-react-lite';
-import { FilterStore, CardStore } from './mobx';
+import { CardStore } from './mobx';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import Select from 'react-select';
@@ -13,8 +13,7 @@ const App = observer(() => {
   const selectSuperviserRef = useRef();
   const selectMerchendiserRef = useRef();
   const selectProjectRef = useRef();
-  const { setFilterableValues } = FilterStore;
-  const { cards, filteredCards } = CardStore;
+  const { cards, filteredCards, setFilterableValues } = CardStore;
   const [showCalendar, setShowCalendar] = useState(false);
   const [dateValue, setDateValue] = useState(new Date());
   const [selectedOption, setSelectedOption] = useState(null);
@@ -35,11 +34,11 @@ const App = observer(() => {
     let result = [];
 
     unique.forEach((value) => {
-      let resi = {
+      let selectorData = {
         value: value,
         label: value,
       };
-      result.push(resi);
+      result.push(selectorData);
     });
     return result;
   }, [cards]);
@@ -55,11 +54,11 @@ const App = observer(() => {
     let result = [];
 
     unique.forEach((value) => {
-      let resi = {
+      let selectorData = {
         value: value,
         label: value,
       };
-      result.push(resi);
+      result.push(selectorData);
     });
     return result;
   }, [cards]);
@@ -71,11 +70,11 @@ const App = observer(() => {
     });
     let result = [];
     [...new Set(allProjects.flat())].forEach((value) => {
-      let resi = {
+      let selectorData = {
         value: value,
         label: value,
       };
-      result.push(resi);
+      result.push(selectorData);
     });
     return result;
   }, [cards]);
@@ -104,7 +103,7 @@ const App = observer(() => {
   };
 
   const setFilters = (type) => {
-    if (selectedOption !== null) {
+    if (selectedOption) {
       switch (type) {
         case 'supervisor':
           selectedFilters.supervisor = selectedOption.value;
@@ -112,7 +111,7 @@ const App = observer(() => {
         case 'merchandiser':
           Array.isArray(selectedOption) &&
             (selectedFilters.merchandiser = selectedOption.map(
-              (item) => item.value
+              ({ value }) => value
             ));
           break;
         case 'project':
@@ -177,7 +176,7 @@ const App = observer(() => {
           </div>
 
           <Calendar
-            onClickDay={(day) => selectedFilters.date = DateTime.fromFormat(day.toLocaleDateString(), "dd.LL.yy") }
+            onClickDay={(day) => selectedFilters.date = DateTime.fromFormat(day.toLocaleDateString(), "dd.LL.yy")}
             onChange={setDateValue}
             value={dateValue}
             className={showCalendar ? '' : 'hide'}
